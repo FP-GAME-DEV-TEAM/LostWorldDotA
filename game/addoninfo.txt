@@ -1,0 +1,11 @@
+"AddonInfo"
+{
+	"maps"				"lostworld_main"
+	"MinimalPrecache"	"1"
+	"IsPlayable"		"1"
+	"EventGame"			"1"
+	"lostworld_main"
+	{
+		"MaxPlayers"	"8"
+	}
+}

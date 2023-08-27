@@ -17,6 +17,11 @@ export class Settings{
         this._TestMode = true;
     }
 
+    // 最大玩家人数
+    public static get MaxPlayerCount(): number {
+        return 8;
+    }
+
     // 地图版本
     public static get Version(): number {
         if(IsInToolsMode()) return 1;

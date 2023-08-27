@@ -1,4 +1,4 @@
-import { OnNpcSpawned } from "./EventHandler";
+import { OnNpcSpawned, OnPlayerChat } from "./EventHandler";
 import { Precache } from "./Precache";
 import { Settings } from "./Settings";
 import { reloadable } from "./lib/tstl-utils";
@@ -25,6 +25,7 @@ export class GameMode {
         // Register event listeners for dota engine events
         ListenToGameEvent("game_rules_state_change", () => this.OnStateChange(), undefined);
         ListenToGameEvent("npc_spawned", event => OnNpcSpawned(event), undefined);
+        ListenToGameEvent("player_chat", event => OnPlayerChat(event), undefined);
     }
 
     private configure(): void {
@@ -60,8 +61,16 @@ export class GameMode {
         GameRules.SetHeroRespawnEnabled(true);
 
         // 设置队伍人数
-        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 8);
-        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 0);
+        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 4);
+        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 4);
+        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.CUSTOM_1, 4);
+        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.CUSTOM_2, 4);
+        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.CUSTOM_3, 4);
+        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.CUSTOM_4, 4);
+        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.CUSTOM_5, 4);
+        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.CUSTOM_6, 4);
+        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.CUSTOM_7, 4);
+        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.CUSTOM_8, 4);
 
         // 数值类设置
         GameRules.SetTimeOfDay(0.251);
@@ -99,7 +108,7 @@ export class GameMode {
 
         // Add 4 bots to lobby in tools
         if (IsInToolsMode() && state == GameState.CUSTOM_GAME_SETUP) {
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 3; i++) {
                 Tutorial.AddBot("npc_dota_hero_lina", "", "", false);
             }
         }
