@@ -1,4 +1,5 @@
 import "./lib/timers";
+import "./lib/popups";
 import { GameMode } from "./GameMode";
 
 // Connect GameMode.Activate and GameMode.Precache to the dota engine
