@@ -1,0 +1,6 @@
+#base "heroes/crystal_maiden/status.kv"
+
+"DOTAHeroes"
+{
+   
+}

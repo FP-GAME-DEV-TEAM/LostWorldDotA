@@ -1,0 +1,446 @@
+// 寒冰法师
+"DOTAAbilities"
+{
+    //=================================================================================================================
+    // 天赋 寒冰之心
+    // 寒冰法师露娜拥有极强的冰系魔法亲和性，她的寒冰体质可以提高自己20%的魔法抗性，同时增加自身100%的法力恢复速度。
+    // 该技能进入冷却时，将恢复自身15%的生命值。在冷却期间还会暂时提高20点智力，并获得反隐形的能力。
+    // |cff00ff00当露娜的生命值低于30%时，将会被动得到“隐形术”效果。|r
+    // |cff00ff00当露娜施放技能时，将会获得“寒冰闪现”技能。|r
+    // |cff0088ff冷却时间|r：24秒。
+    //=================================================================================================================
+    "ability_crystal_maiden_talent_ts"
+    {
+        "BaseClass"             "ability_lua"
+        "ScriptFile"            "abilities/heroes/crystal_maiden/talent.lua"
+        "AbilityTextureName"    "crystal_maiden_brilliance_aura"
+        "AbilityBehavior"       "DOTA_ABILITY_BEHAVIOR_PASSIVE | DOTA_ABILITY_BEHAVIOR_HIDDEN"
+        "MaxLevel"              "1"
+
+        "AbilityValues"
+        {
+            "magic_resistance_bonus"            "20"
+            "int_bonus_when_cooldown"           "20"
+            "mana_regen_pct_bonus"            "100"
+            "stealth_max_hp_threshold"          "30"
+            "stealth_duration"                  "16"
+            "stealth_heal_max_hp_pct"           "15"
+            "blink_active_duration_per_spell"             "8"
+        }
+    }
+
+    //=================================================================================================================
+    // 寒冰闪现
+    // 发动寒冰闪现，短距离瞬间移动到指定地点。同时获得“寒冰护甲”效果，额外增加3点护甲，持续30秒。
+    // |cffff8800闪现无法穿越边界区域。|r
+    // |cffff0000该技能使用后恢复未激活状态|r
+    // |cff0088ff施法距离|r：200-600码。
+    // |cff0088ff冷却时间|r：24秒。
+    //=================================================================================================================
+    "ability_crystal_maiden_ice_blink_ts"
+    {
+        "BaseClass"                     "ability_lua"
+        "ScriptFile"                    "abilities/heroes/crystal_maiden/ice_blink.lua"
+        "AbilityTextureName"            "antimage/immortal/antimage_blink"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_POINT_TARGET | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+        "HotKeyOverride"                "D"
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_FRIENDLY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO"
+
+        "AbilityCastAnimation"			"ACT_DOTA_ATTACK_1"
+		"AbilityCastGestureSlot"		"DEFAULT"
+
+        "AbilityCastRange"              "600"
+        "AbilityCastPoint"              "0.33"
+        "AbilityCooldown"               "24"
+        "MaxLevel"                      "1"
+
+        "AbilityValues"
+        {
+            "buff_armor_bonus"          "3 6 9 12"
+            "buff_duration"             "30"
+        }
+    }
+
+    //=================================================================================================================
+    // 霜冻飞弹
+    // 向目标发射带有冰霜能量的魔法飞弹，对目标单位造成(智力*3)点伤害和短暂的昏迷，并对目标及其周围的敌人造成100点伤害和5秒的霜冻减速效果。
+    // 若目标带有霜冻效果，则还会对目标造成6秒的沉默。
+    // |cffff8800英雄持续时间减半。|r
+    // |cff0088ff作用范围|r：225码。
+    // |cff0088ff施法距离|r：800码。
+    // |cff0088ff冷却时间|r：9秒。
+    //=================================================================================================================
+    "ability_crystal_maiden_ice_missile_ts"
+    {
+        "BaseClass"                     "ability_lua"
+        "ScriptFile"                    "abilities/heroes/crystal_maiden/ice_missile.lua"
+        "AbilityTextureName"            "ice_shaman_incendiary_bomb"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_AOE"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
+        "HotKeyOverride"                "Q"
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+        "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"
+
+        "AbilityCastAnimation"			"ACT_DOTA_CAST_ABILITY_2"
+		"AbilityCastGestureSlot"		"DEFAULT"
+
+        "AbilityCastRange"              "800"
+        "AbilityCastPoint"              "0.5"
+        "AbilityCooldown"               "9"
+        "AbilityManaCost"               "110 140 170 200"
+
+        "AbilityValues"
+        {
+            "base_dmg"                  "100 200 300 400"
+            "int_bonus_ratio"           "3 3 3 3"
+            "radius"                    "225"
+            "stun_duration"             "0.1"
+            "freeze_duration"           "5.0"
+            "silence_duration_for_unit"          "6.0"
+            "silence_duration_for_hero"          "3.0"
+            
+        }
+    }
+
+    
+    //=================================================================================================================
+    // 冰霜新星
+    // 召唤强烈的冰霜爆炸攻击范围内所有敌人，对他们造成(智力*3)+50点伤害和造成5秒的霜冻减速效果。对生命值低于50%的目标造成额外25%的技能伤害。
+    // 同时范围内的所有友军单位将得到“寒冰护甲”效果，提高3点护甲，持续30秒。
+    // |cff0088ff作用范围|r：275码。
+    // |cff0088ff施法距离|r：700码。
+    // |cff0088ff冷却时间|r：12秒。
+    //=================================================================================================================
+    "ability_crystal_maiden_ice_nova_ts"
+    {
+        "BaseClass"                     "ability_lua"
+        "ScriptFile"                    "abilities/heroes/crystal_maiden/ice_nova.lua"
+        "AbilityTextureName"            "crystal_maiden_crystal_nova"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_POINT_TARGET | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_MOVEMENT"
+        "HotKeyOverride"                "W"
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+        "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"
+
+        "AbilityCastAnimation"			"ACT_DOTA_CAST_ABILITY_1"
+		"AbilityCastGestureSlot"		"DEFAULT"
+
+        
+        "AbilityCastPoint"              "0.5"
+        "AbilityCooldown"               "12"
+        "AbilityManaCost"               "120 160 200 240"
+        "AbilityCastRange"              "700"
+
+        "AbilityValues"
+        {
+            "radius"                    "275"
+            "base_dmg"                  "50 100 150 200"
+            "int_bonus_ratio"           "3"
+            "dmg_bonus_threshold_hp_pct" "50"
+            "dmg_bonus_pct"             "25"
+            "freeze_duration"           "5.0"
+            "buff_armor_bonus"          "3 6 9 12"
+            "buff_duration"             "30"
+        }
+    }
+
+    
+    //=================================================================================================================
+    // 冰雪漩涡
+    // 在目标区域创造一个冰雪涌动的漩涡。冰雪漩涡内的所有敌人都将受到每秒(智力*0.5)+20点的持续伤害，并受到霜冻减速效果。
+    // 冰雪漩涡持续10秒。
+    // |cff0088ff作用范围|r：250码。
+    // |cff0088ff施法距离|r：700码。
+    // |cff0088ff冷却时间|r：18秒。
+    //=================================================================================================================
+    "ability_crystal_maiden_ice_vortex_ts"
+    {
+        "BaseClass"                     "ability_lua"
+        "ScriptFile"                    "abilities/heroes/crystal_maiden/ice_vortex.lua"
+        "AbilityTextureName"            "ancient_apparition_ice_vortex"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_POINT_TARGET | DOTA_ABILITY_BEHAVIOR_AOE"
+        "HotKeyOverride"                "E"
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+        "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"
+
+        "AbilityCastAnimation"			"ACT_DOTA_ATTACK_1"
+		"AbilityCastGestureSlot"		"DEFAULT"
+
+        "AbilityCastPoint"              "0.5"
+        "AbilityCooldown"               "18"
+        "AbilityManaCost"               "140 185 230 275"
+        "AbilityCastRange"              "700 800 900 1000"
+
+        "AbilityValues"
+        {
+            "radius"                    "250"
+            "duration"                  "10"
+            "dmg_interval"              "1.0"
+            "base_dmg"                  "20 40 60 80"
+            "int_bonus_ratio"           "0.5"
+        }
+    }
+
+    //=================================================================================================================
+    // 深度冻结
+    // 用极寒的能量冲击目标，造成(智力*2)+75点伤害，并将目标冰封6秒。效果持续期间，目标只会受到60%的伤害。
+    // 若目标带有霜冻效果，则造成200%的伤害。
+    // 冰封效果会在目标受到最多400点伤害时解除。
+    // |cffff8800英雄持续时间减半。|r
+    // |cff0088ff施法距离|r：500码。
+    // |cff0088ff冷却时间|r：20秒。
+    //=================================================================================================================
+    "ability_crystal_maiden_deep_frozen_ts"
+    {
+        "BaseClass"                     "ability_lua"
+        "ScriptFile"                    "abilities/heroes/crystal_maiden/deep_frozen.lua"
+        "AbilityTextureName"            "crystal_maiden_frostbite"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_MOVEMENT"
+        "HotKeyOverride"                "R"
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+        "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"
+
+        "AbilityCastAnimation"			"ACT_DOTA_CAST_ABILITY_1"
+		"AbilityCastGestureSlot"		"DEFAULT"
+
+        "AbilityCastPoint"              "0.5"
+        "AbilityCooldown"               "20"
+        "AbilityManaCost"               "140 185 230 275"
+        "AbilityCastRange"              "500"
+
+        "AbilityValues"
+        {
+            "radius"                    "75 150 225 300"
+            "base_dmg"                  "20 40 60 80"
+            "int_bonus_ratio"           "2"
+            "dmg_bonus_pct_by_freeze"   "100"
+            "frozen_break_total_dmg"    "400 800 1200 1600"
+            "frozen_duration_for_unit"  "6 8 10 12"
+            "frozen_duration_for_hero"  "3 4 5 6"
+            "frozen_dmg_reduce_pct"     "40"
+        }
+    }
+
+    //=================================================================================================================
+    // 极寒领域
+    // 发动寒冰禁咒，开启极寒领域，在一大片范围内召唤出无与伦比的寒冰能量。
+    // 初始时对范围内的敌人造成(智力*4)+100点伤害，并在持续时间内造成每秒(智力*2)+100点伤害，同时附加霜冻减速效果，持续5秒。
+    // |cffff8800需要持续施法。|r
+    // |cff0088ff作用范围|r：600码。
+    // |cff0088ff冷却时间|r：60秒。
+    //=================================================================================================================
+    "ability_crystal_maiden_freezing_field_ts"
+    {
+        "BaseClass"                     "ability_lua"
+        "ScriptFile"                    "abilities/heroes/crystal_maiden/freezing_field.lua"
+        "AbilityTextureName"            "crystal_maiden_ice_rink"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_CHANNELED | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_MOVEMENT"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
+        "HotKeyOverride"                "F"
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+        "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"
+
+        "AbilityCastAnimation"			"ACT_DOTA_CAST_ABILITY_4"
+		"AbilityCastGestureSlot"		"DEFAULT"
+
+        "AbilityCastRange"              "0"
+        "AbilityCastPoint"              "0.25"
+        "AbilityManaCost"               "300 400 600"
+        "AbilityCooldown"               "60"
+        "AbilityChannelTime"            "5"
+
+        "AbilityType"                   "DOTA_ABILITY_TYPE_ULTIMATE"
+        "MaxLevel"                      "3"
+        "RequiredLevel"                 "-4"
+        "LevelsBetweenUpgrades"         "8"
+
+        // "HasScepterUpgrade"             "1"
+        // "HasShardUpgrade"               "1"
+
+        "AbilityValues"
+        {
+            "radius"                    "600"
+            "interval"                  "1"
+            "base_dmg"                  "100 200 300"
+            "int_bonus_ratio"           "4.0"
+            "freeze_duration"           "5.0"
+        }
+    }
+
+    //=================================================================================================================
+    // 寒冰护盾
+    //=================================================================================================================
+    "ability_crystal_maiden_ice_shield_ts"
+    {
+        "BaseClass"                     "ability_lua"
+        "ScriptFile"                    "abilities/heroes/crystal_maiden/ice_shield.lua"
+        "AbilityTextureName"            "medusa/blueice_abilityicons/medusa_mana_shield"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_UNIT_TARGET | DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+        "HotKeyOverride"                "F"
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_FRIENDLY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO"
+
+        "AbilityCastAnimation"			"ACT_DOTA_ATTACK_1"
+		"AbilityCastGestureSlot"		"DEFAULT"
+
+        "AbilityCastRange"              "600"
+        "AbilityCastPoint"              "0.33"
+        "AbilityCooldown"               "5"
+        "MaxLevel"                      "1"
+
+        "AbilityValues"
+        {
+            "mana_cost_pct"            "7.5"
+            "base_shield"
+            {
+                "value"                 "150"
+            }
+            "spend_mana_bonus_ratio"
+            {
+                "value"                 "5.0"
+            }
+            "armor_bonus"
+            {
+                "value"                 "0"
+                "special_bonus_unique_crystal_maiden_ice_shield_defense"    "+12"
+            }
+            "magic_resistance_bonus"
+            {
+                "value"                 "0"
+                "special_bonus_unique_crystal_maiden_ice_shield_defense"    "+25"
+            }
+        }
+    }
+
+    //=================================================================================================================
+    // 暴风雪
+    //=================================================================================================================
+    "ability_crystal_maiden_ice_storm_ts"
+    {
+        "BaseClass"                     "ability_lua"
+        "ScriptFile"                    "abilities/heroes/crystal_maiden/ice_storm.lua"
+        "AbilityTextureName"            "crystal_maiden_freezing_field"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_POINT_TARGET | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_MOVEMENT"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_NO"
+        "HotKeyOverride"                "E"
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_BASIC | DOTA_UNIT_TARGET_HERO"
+        "AbilityUnitDamageType"         "DAMAGE_TYPE_MAGICAL"
+
+        "AbilityCastAnimation"			"ACT_DOTA_CAST_ABILITY_1"
+		"AbilityCastGestureSlot"		"DEFAULT"
+
+        "AbilityCastRange"              "650"
+        "AbilityCastPoint"              "0.5"
+        "AbilityManaCost"               "100 175 250 325"
+        "AbilityCooldown"               "12"
+
+        "AbilityValues"
+        {
+            "radius"
+            {
+                "value"                 "350"
+            }
+            "storm_count"
+            {
+                "value"                 "16 22 28 32"
+                "special_bonus_unique_crystal_maiden_ice_storm_count"   "+24"
+            }
+            "storm_radius"
+            {
+                "value"                 "90"
+            }
+            "storm_interval"
+            {
+                "value"                 "0.25"
+            }
+            "base_dmg"
+            {
+                "value"                 "32 48 64 80"
+            }
+            "int_bonus_ratio"
+            {
+                "value"                 "1.4"
+            }
+        }
+    }
+
+
+
+    "special_bonus_crystal_maiden_placeholder"
+	{
+		"AbilityType"					"DOTA_ABILITY_TYPE_ATTRIBUTES"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+        "BaseClass"						"special_bonus_base"
+	}
+
+    // 冰霜新星范围+200，施法距离+150
+    "special_bonus_unique_crystal_maiden_ice_nova_range"
+	{
+		"AbilityType"					"DOTA_ABILITY_TYPE_ATTRIBUTES"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+        "BaseClass"						"special_bonus_base"
+
+        "AbilityValues"
+        {
+            "aoe_radius_bonus"          "200"
+            "cast_range_bonus"          "150"
+        }
+	}
+
+    // 极寒领域CD-20
+    "special_bonus_unique_crystal_maiden_freezing_field_cooldown"
+	{
+		"AbilityType"					"DOTA_ABILITY_TYPE_ATTRIBUTES"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+        "BaseClass"						"special_bonus_base"
+        "AbilityValues"
+        {
+            "cooldown_reduce"          "20"
+        }
+	}
+
+    // 渐冻debuff持续时间+4秒
+    "special_bonus_unique_crystal_maiden_freeze_debuff_duration"
+	{
+		"AbilityType"					"DOTA_ABILITY_TYPE_ATTRIBUTES"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+        "BaseClass"						"special_bonus_base"
+
+        "AbilityValues"
+        {
+            "duration_bonus"          "4"
+        }
+	}
+
+    // 寒冰护盾增加护甲和魔抗
+    "special_bonus_unique_crystal_maiden_ice_shield_defense"
+	{
+		"AbilityType"					"DOTA_ABILITY_TYPE_ATTRIBUTES"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+        "BaseClass"						"special_bonus_base"
+        "AbilityValues"
+        {
+            "armor_bonus"          "12"
+            "magic_resistance_bonus"          "25"
+        }
+	}
+
+    // 暴风雪产生数量+24（影响持续时间）
+    "special_bonus_unique_crystal_maiden_ice_storm_count"
+	{
+		"AbilityType"					"DOTA_ABILITY_TYPE_ATTRIBUTES"
+		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_PASSIVE"
+        "BaseClass"						"special_bonus_base"
+        "AbilityValues"
+        {
+            "count_bonus"          "24"
+        }
+	}
+    
+}

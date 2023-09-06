@@ -13,8 +13,9 @@
 
 // To declare an event for use, add it to this table with the type of its data
 interface CustomGameEventDeclarations {
+    CreateIngameErrorMessage: CreateIngameErrorMessage,
     example_event: ExampleEventData,
-    ui_panel_closed: UIPanelClosedEventData
+    ui_panel_closed: UIPanelClosedEventData,
 }
 
 // Define the type of data sent by the example_event event
@@ -27,3 +28,8 @@ interface ExampleEventData {
 
 // This event has no data
 interface UIPanelClosedEventData {}
+
+// 显示错误提示
+interface CreateIngameErrorMessage {
+    message: string,
+}

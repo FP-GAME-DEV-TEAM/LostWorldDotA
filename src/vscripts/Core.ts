@@ -29,3 +29,49 @@ export function PrintTable(kv: any, key="", inner: (a : any) => string = ()=>"")
     }
     print("}");
 }
+
+// 判断是否有魔晶
+export function HasShard(u: CDOTA_BaseNPC | undefined) : boolean{
+    if(!u) return false;
+    return u.HasModifier("modifier_item_aghanims_shard");
+}
+
+// 判断单位是否存活
+export function IsAliveUnit(u: CDOTA_BaseNPC | undefined) : u is CDOTA_BaseNPC{
+    if(!u || u == undefined || u.IsNull()) return false;
+    return u.IsAlive();
+}
+
+// 创建特效
+export function CreateCommonParticle(particleName: string, target: CBaseEntity | undefined, callback?: (p:ParticleID)=>void, attach: ParticleAttachment = ParticleAttachment.ABSORIGIN_FOLLOW) : void{
+    const particle = ParticleManager.CreateParticle(particleName, attach, target);
+    if(callback) callback(particle);
+    ParticleManager.ReleaseParticleIndex(particle);
+}
+
+// 创建延时特效
+export function CreateDelayParticle(particleName: string, target: CBaseEntity | undefined, delay: number, callback?: (p:ParticleID)=>void, attach: ParticleAttachment = ParticleAttachment.ABSORIGIN_FOLLOW) : void{
+    if(delay <= 0) delay = FrameTime();
+    const particle = ParticleManager.CreateParticle(particleName, attach, target);
+    if(callback) callback(particle);
+    Timers.CreateTimer(delay, () => {
+        ParticleManager.DestroyParticle(particle, true);
+    });
+}
+
+// 吸血特效
+export function CreateParticle_Lifesteal(target: CBaseEntity | undefined) : void{
+    CreateCommonParticle("particles/items3_fx/octarine_core_lifesteal.vpcf", target);
+}
+
+// 客户端显示错误信息
+export function DisplayError(playerID: PlayerID, message: string){
+    if(playerID == -1){
+        CustomGameEventManager.Send_ServerToAllClients("CreateIngameErrorMessage", {message:message})
+        return;
+    }
+    const player = PlayerResource.GetPlayer(playerID);
+    if(player){
+        CustomGameEventManager.Send_ServerToPlayer(player, "CreateIngameErrorMessage", {message:message})
+    }
+}
